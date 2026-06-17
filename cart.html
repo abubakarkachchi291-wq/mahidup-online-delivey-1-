@@ -5,15 +5,26 @@
 </head>
 <body>
 
-<h1>Your Cart</h1>
+<h1>Your Bill</h1>
 
-<p>Rice 5kg - ₹300</p>
-<p>Cooking Oil 1L - ₹140</p>
+<p>Product: <span id="name"></span></p>
+<p>Price: ₹<span id="price"></span></p>
+<p>Delivery Charge: ₹30</p>
 
-<h2>Total: ₹440</h2>
+<h2>Total: ₹<span id="total"></span></h2>
 
 <a href="checkout.html">
 <button>Proceed to Checkout</button>
 </a>
+
+<script>
+let name = localStorage.getItem("cartName");
+let price = Number(localStorage.getItem("cartPrice"));
+
+document.getElementById("name").innerText = name;
+document.getElementById("price").innerText = price;
+document.getElementById("total").innerText = price + 30;
+</script>
+
 </body>
 </html>
