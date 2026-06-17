@@ -1,22 +1,64 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Register Shop</title>
+<title>Add Product</title>
+<style>
+body{font-family:Arial;background:#f4f8fb;text-align:center}
+.box{background:white;margin:25px auto;padding:20px;max-width:420px;border-radius:12px;box-shadow:0 2px 8px #ccc}
+input,select{width:90%;padding:12px;margin:8px;border:1px solid #ccc;border-radius:8px}
+button{background:green;color:white;border:none;padding:12px 20px;border-radius:8px;font-size:16px}
+</style>
 </head>
-<body style="font-family:Arial;text-align:center">
+<body>
 
-<h1>Register Your Shop</h1>
-<p>Shop owner apne products add karne ke liye neeche button dabaye.</p>
+<h1>Add Product</h1>
 
-<a href="https://docs.google.com/forms/d/e/1FAIpQLSeXgZE5A8xHI6AFzZNf6gb7xhSYvfnVtbH2pGurqpkbjkpCJw/viewform" target="_blank">
-<button style="padding:15px 25px;background:green;color:white;border:0;border-radius:8px;font-size:18px">
-Add Your Products
-</button>
-</a>
+<div class="box">
+<input id="shopName" placeholder="Shop Name">
+<input id="productName" placeholder="Product Name">
+<input id="price" placeholder="Price">
+<select id="category">
+<option>Grocery</option>
+<option>Medical Store</option>
+<option>Restaurant</option>
+<option>Stationery</option>
+<option>Clothing</option>
+<option>Electronics</option>
+</select>
 
-<br><br>
+<button onclick="addProduct()">Add Product</button>
+</div>
+
 <a href="index.html">Back to Home</a>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCU7bPTGq5dCKAIk78gayctHGIuK8AFNeg",
+  authDomain: "mahidpur-online-delivery.firebaseapp.com",
+  databaseURL: "https://mahidpur-online-delivery-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "mahidpur-online-delivery",
+  storageBucket: "mahidpur-online-delivery.firebasestorage.app",
+  messagingSenderId: "960646763964",
+  appId: "1:960646763964:web:ce44055c7a772e046007b9"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+window.addProduct = function(){
+  push(ref(db, "products"), {
+    shop: document.getElementById("shopName").value,
+    name: document.getElementById("productName").value,
+    price: document.getElementById("price").value,
+    category: document.getElementById("category").value
+  });
+
+  alert("Product added successfully!");
+}
+</script>
 
 </body>
 </html>
-
