@@ -49,6 +49,10 @@ onValue(ref(db, "products"), (snapshot) => {
   });
 });
 </script>
-
+window.addToCart = function(name, price){
+  localStorage.setItem("cartName", name);
+  localStorage.setItem("cartPrice", price);
+  window.location.href = "cart.html";
+}
 </body>
 </html>
