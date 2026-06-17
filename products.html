@@ -43,7 +43,7 @@ onValue(ref(db, "products"), (snapshot) => {
         <h2>${p.name}</h2>
         <p>₹${p.price}</p>
         <p>${p.category}</p>
-        <a href="cart.html"><button>Add to Cart</button></a>
+       <button onclick="addToCart('${p.name}', '${p.price}')">Add to Cart</button>
       </div>
     `;
   });
