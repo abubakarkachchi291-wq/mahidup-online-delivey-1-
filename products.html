@@ -34,25 +34,35 @@ const db = getDatabase(app);
 
 const productList = document.getElementById("productList");
 
-onValue(ref(db, "products"), (snapshot) => {
-  productList.innerHTML = "";
-  snapshot.forEach((child) => {
-    const p = child.val();
-    productList.innerHTML += `
-      <div class="product">
-        <h2>${p.name}</h2>
-        <p>₹${p.price}</p>
-        <p>${p.category}</p>
-       <button onclick="addToCart('${p.name}', '${p.price}')">Add to Cart</button>
-      </div>
-    `;
-  });
-});
-</script>
 window.addToCart = function(name, price){
   localStorage.setItem("cartName", name);
   localStorage.setItem("cartPrice", price);
   window.location.href = "cart.html";
 }
+
+onValue(ref(db, "products"), (snapshot) => {
+  productList.innerHTML = "";
+
+  if (!snapshot.exists()) {
+    productList.innerHTML = "<p>No products available.</p>";
+    return;
+  }
+
+  snapshot.forEach((child) => {
+    const p = child.val();
+
+    productList.innerHTML += `
+      <div class="product">
+        <h2>${p.name}</h2>
+        <p>Shop: ${p.shop}</p>
+        <p>₹${p.price}</p>
+        <p>${p.category}</p>
+        <button onclick="window.addToCart('${p.name}', '${p.price}')">Add to Cart</button>
+      </div>
+    `;
+  });
+});
+</script>
+
 </body>
 </html>
