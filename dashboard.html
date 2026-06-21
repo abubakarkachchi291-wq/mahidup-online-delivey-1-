@@ -1,54 +1,107 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Shop Dashboard</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard</title>
 <style>
-body{font-family:Arial;background:#f4f8fb;text-align:center}
-.box{
-background:white;
-max-width:500px;
-margin:20px auto;
-padding:20px;
-border-radius:12px;
-box-shadow:0 2px 8px #ccc;
-}
-input{
-width:90%;
-padding:10px;
-margin:10px;
-}
-button{
-background:green;
-color:white;
-border:none;
-padding:12px 20px;
-border-radius:8px;
-}
+body{font-family:Arial;background:#f4f8fb;text-align:center;margin:0}
+header{background:#0ea5e9;color:white;padding:20px}
+.card{background:white;margin:15px auto;padding:15px;max-width:520px;border-radius:12px;box-shadow:0 2px 8px #ccc}
+.delete{background:red;color:white;border:none;padding:10px 15px;border-radius:8px}
+.back{background:green;color:white;padding:10px 15px;border-radius:8px;text-decoration:none}
 </style>
 </head>
 <body>
 
-<div class="box">
-<h1>Shop Owner Dashboard</h1>
+<header>
+<h1>Admin Dashboard</h1>
+<p>Mahidpur Online Delivery</p>
+</header>
 
-<h2>Add Product</h2>
+<h2>Products</h2>
+<div id="productsBox"></div>
 
-<input type="text" placeholder="Product Name">
-<input type="number" placeholder="Price">
+<h2>Orders</h2>
+<div id="ordersBox"></div>
 
-<button>Add Product</button>
+<br>
+<a class="back" href="index.html">Back to Home</a>
 
-<h2>Your Products</h2>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getDatabase, ref, onValue, remove } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
-<p>Rice - ₹300</p>
-<p>Cooking Oil - ₹140</p>
+const firebaseConfig = {
+  apiKey: "AIzaSyCU7bPTGq5dCKAIk78gayctHGIuK8AFNeg",
+  authDomain: "mahidpur-online-delivery.firebaseapp.com",
+  databaseURL: "https://mahidpur-online-delivery-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "mahidpur-online-delivery",
+  storageBucket: "mahidpur-online-delivery.firebasestorage.app",
+  messagingSenderId: "960646763964",
+  appId: "1:960646763964:web:ce44055c7a772e046007b9"
+};
 
-<a href="index.html">
-<button>Back to Home</button>
-</a>
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
 
-</div>
+onValue(ref(db, "products"), (snapshot) => {
+  const box = document.getElementById("productsBox");
+  box.innerHTML = "";
+
+  if(!snapshot.exists()){
+    box.innerHTML = "<div class='card'>No products found</div>";
+    return;
+  }
+
+  snapshot.forEach((child) => {
+    const p = child.val();
+    const id = child.key;
+
+    box.innerHTML += `
+      <div class="card">
+        <h3>${p.name || "No Name"}</h3>
+        <p><b>Shop:</b> ${p.shop || "N/A"}</p>
+        <p><b>Price:</b> ₹${p.price || "0"}</p>
+        <p><b>Category:</b> ${p.category || "N/A"}</p>
+        <button class="delete" onclick="deleteProduct('${id}')">Delete Product</button>
+      </div>
+    `;
+  });
+});
+
+onValue(ref(db, "orders"), (snapshot) => {
+  const box = document.getElementById("ordersBox");
+  box.innerHTML = "";
+
+  if(!snapshot.exists()){
+    box.innerHTML = "<div class='card'>No orders found</div>";
+    return;
+  }
+
+  snapshot.forEach((child) => {
+    const o = child.val();
+
+    box.innerHTML += `
+      <div class="card">
+        <h3>New Order</h3>
+        <p><b>Name:</b> ${o.name || "N/A"}</p>
+        <p><b>Mobile:</b> ${o.mobile || "N/A"}</p>
+        <p><b>Address:</b> ${o.address || "N/A"}</p>
+        <p><b>Product:</b> ${o.product || "N/A"}</p>
+        <p><b>Price:</b> ₹${o.price || "0"}</p>
+        <p><b>Payment:</b> ${o.payment || "N/A"}</p>
+        <p><b>Time:</b> ${o.time || "N/A"}</p>
+      </div>
+    `;
+  });
+});
+
+window.deleteProduct = function(id){
+  if(confirm("Delete this product?")){
+    remove(ref(db,"products/"+id));
+    alert("Product deleted");
+  }
+}
+</script>
 
 </body>
 </html>
