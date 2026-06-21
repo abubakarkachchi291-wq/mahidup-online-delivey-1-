@@ -1,27 +1,26 @@
+```html
 <!DOCTYPE html>
 <html>
 <head>
 <title>Checkout</title>
 </head>
 <body>
+
 <h2>PhonePe Payment</h2>
 
 <img src="qr.png.jpeg" width="250">
 
 <p>QR Scan karke payment karein</p>
 
-<a href="order-success.html">
-<button>Payment Done</button>
-</a>
 <h1>Checkout Page</h1>
 
-<input type="text" placeholder="Your Name"><br><br>
+<input id="custName" type="text" placeholder="Your Name"><br><br>
 
-<input type="tel" placeholder="Mobile Number"><br><br>
+<input id="mobile" type="tel" placeholder="Mobile Number"><br><br>
 
-<textarea placeholder="Delivery Address"></textarea><br><br>
+<textarea id="address" placeholder="Delivery Address"></textarea><br><br>
 
-<select>
+<select id="payment">
 <option>Cash on Delivery</option>
 <option>UPI</option>
 <option>Card Payment</option>
@@ -29,9 +28,42 @@
 
 <br><br>
 
-<a href="order-success.html">
-<button>Place Order</button>
-</a>
+<button onclick="placeOrder()">Place Order</button>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCU7bPTGq5dCKAIk78gayctHGIuK8AFNeg",
+  authDomain: "mahidpur-online-delivery.firebaseapp.com",
+  databaseURL: "https://mahidpur-online-delivery-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "mahidpur-online-delivery",
+  storageBucket: "mahidpur-online-delivery.firebasestorage.app",
+  messagingSenderId: "960646763964",
+  appId: "1:960646763964:web:ce44055c7a772e046007b9"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+window.placeOrder = function(){
+
+push(ref(db,"orders"),{
+name: document.getElementById("custName").value,
+mobile: document.getElementById("mobile").value,
+address: document.getElementById("address").value,
+payment: document.getElementById("payment").value,
+product: localStorage.getItem("cartName"),
+price: localStorage.getItem("cartPrice"),
+time: new Date().toLocaleString()
+});
+
+window.location.href="order-success.html";
+}
+</script>
 
 </body>
 </html>
+```
+
